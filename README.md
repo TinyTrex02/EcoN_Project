@@ -1,1 +1,1 @@
-# EcoN_Project
+# Econometrics Project
