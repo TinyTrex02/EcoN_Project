@@ -1,0 +1,298 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{threeparttable}
+
+\title{\textbf{Climate Vulnerability and US Stock Market Returns:\\An Empirical Investigation}}
+\author{Student Number: 249631069}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Research Question and Motivation}
+
+This study addresses: \textbf{Does climate vulnerability, as measured by the ND-GAIN Vulnerability Score, significantly predict US excess stock market returns after controlling for valuation and credit risk factors?}
+
+This question is critically important for asset pricing, portfolio management, and climate risk assessment. While extensive research examines traditional financial predictors of equity returns, the role of climate-related physical risks remains understudied in developed markets. Climate vulnerability captures exposure to floods, storms, droughts, and adaptive capacity across infrastructure, health, and ecosystems. Understanding whether vulnerability commands a risk premium informs investors pricing climate risk and policymakers evaluating financial stability. The US provides a unique test case: as a low-vulnerability economy with efficient markets, it reveals whether climate risks are already priced or represent unexploited information.
+
+% ========== IMAGE 1: ND-GAIN HEATMAP ==========
+% INSTRUCTION: Place your heatmap image here
+% Save the heatmap as "ndgain_heatmap.png" in the same folder as this .tex file
+% Uncomment the lines below after saving the image:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{../06_VISUALIZATIONS/nd_gain_heatmap.png}
+\caption{Climate Vulnerability Heatmap: Top 30 Most Vulnerable Countries (1995-2023). The ND-GAIN Vulnerability Score ranges from 0 (low) to 1 (high). USA exhibits exceptionally low vulnerability (0.307-0.317) compared to high-vulnerability countries like Chad (0.65-0.70).}
+\label{fig:heatmap}
+\end{figure}
+
+% ========== IMAGE 2: USA VULNERABILITY TREND ==========
+% INSTRUCTION: Place your USA vulnerability trend plot here
+% Save as "usa_vulnerability_trend.png" in the same folder
+% Uncomment the lines below after saving:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../06_VISUALIZATIONS/usa_vulnerability_analysis.png}
+\caption{USA Climate Vulnerability (1995-2023). US vulnerability shows a slight negative trend (-0.00287/year), declining from 0.317 in 1995 to 0.312 in 2023. The limited 1-percentage-point variation constrains statistical power to detect return effects.}
+\label{fig:usa_trend}
+\end{figure}
+
+\section{Economic Theory and Model Specification}
+
+\subsection{Theoretical Framework}
+
+\textbf{Climate Vulnerability:} Three channels link vulnerability to returns. (1) \textbf{Risk Premium Channel:} Higher vulnerability increases macroeconomic volatility and tail risks. Under consumption-based asset pricing, investors demand higher risk premia, depressing current prices and reducing returns. (2) \textbf{Cash Flow Channel:} Vulnerability reduces expected dividends through infrastructure damage and productivity losses. (3) \textbf{Discount Rate Channel:} Vulnerability may elevate required returns, though forward-looking markets may already capitalize this effect. \textit{Expected sign: Negative.}
+
+\textbf{Dividend-Price Ratio (dp):} The Campbell-Shiller present value identity shows that when dp is high (prices low relative to dividends), expected future returns must be high (assuming mean-reverting dividend growth). This reflects valuation mean reversion. \textit{Expected sign: Positive.}
+
+\textbf{Default Return Spread (dfr):} When corporate bonds outperform government bonds, it signals improving credit conditions and rising risk appetite, typically coinciding with strong equity performance. Credit markets often lead equities in pricing macroeconomic information. \textit{Expected sign: Positive.}
+
+\subsection{Econometric Model}
+
+\begin{equation}
+R^{excess}_t = \beta_0 + \beta_1 Vuln_t + \beta_2 dp_t + \beta_3 dfr_t + \varepsilon_t
+\end{equation}
+
+where $R^{excess}_t$ = S\&P 500 return minus risk-free rate, $Vuln_t$ = ND-GAIN Vulnerability Score (0-1), $dp_t$ = Dividend-Price Ratio, $dfr_t$ = Default Return Spread (corporate minus government bond returns).
+
+This specification is \textbf{theory-driven}, combining three distinct channels: climate risk, valuation, and credit sentiment. The parsimony (3 predictors) avoids multicollinearity documented in prior literature. Variables are selected based on theoretical priors from asset pricing research, not empirical performance, reducing data snooping bias.
+
+\section{Data Description}
+
+\subsection{Data Type and Sample}
+
+The dataset is \textbf{time series data}---monthly observations of the US market from January 1995 to December 2020 (312 observations). This contrasts with cross-sectional (multiple units at one time) or panel data (multiple units over time).
+
+\subsection{Data Sources and Construction}
+
+\textbf{ND-GAIN Vulnerability:} Annual data from Notre Dame Global Adaptation Initiative, extended to monthly frequency by assigning each year's value to all 12 months. Climate vulnerability evolves slowly; annual updates capture meaningful changes while monthly extension preserves time-series variation. US vulnerability ranges 0.307-0.317.
+
+\textbf{Financial Variables:} Goyal-Welch dataset consolidating CRSP (S\&P 500 returns), FRED (Treasury rates, corporate yields), and Ibbotson (bond returns). Constructed variables: $R^{excess}_t$ = CRSP\_SPvw $-$ Rfree; $dp_t$ = D12/Index; $dfr_t$ = Corporate bond return $-$ Government bond return.
+
+\subsection{Data Quality and Limitations}
+
+\textbf{Missing Values:} Zero missing values across 312 observations. No imputation required.
+
+\textbf{Outlier Treatment:} No winsorization applied to preserve tail events (2008 crisis, COVID-19). Robustness checks at 1\% and 5\% winsorization performed.
+
+\textbf{Key Limitations:} (1) Annual ND-GAIN extended monthly reduces effective variation to 26 years, potentially underestimating standard errors; (2) Low US vulnerability (1-point range) limits detection power; (3) Contemporaneous specification tests association, not prediction; (4) S\&P 500 survivorship bias may understate climate impacts.
+
+\section{Regression Results}
+
+Table \ref{tab:main_regression} presents OLS estimates with HC3 robust standard errors, correcting for heteroskedasticity detected in diagnostic tests.
+
+\begin{table}[H]
+\centering
+\caption{Regression Results: Excess Returns on Climate Vulnerability and Financial Predictors}
+\label{tab:main_regression}
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule
+Variable & Coefficient & Robust SE & t-statistic & p-value \\
+\midrule
+Constant & 0.3922 & 0.2400 & 1.634 & 0.102 \\
+Vulnerability (Vuln) & $-1.1618$ & 0.7272 & $-1.598$ & 0.110 \\
+Dividend-Price (dp) & $-1.0713$ & 1.0984 & $-0.975$ & 0.329 \\
+Default Spread (dfr) & $1.1500^{***}$ & 0.1659 & 6.931 & 0.000 \\
+\midrule
+R$^2$ & \multicolumn{4}{c}{0.2517} \\
+Adjusted R$^2$ & \multicolumn{4}{c}{0.2444} \\
+F-statistic & \multicolumn{4}{c}{17.44 (p = 1.75e-10)} \\
+Observations & \multicolumn{4}{c}{312} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item Note: $^{***}$ p$<$0.01. Sample: Jan 1995--Dec 2020.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\subsection{Interpretation}
+
+\textbf{Climate Vulnerability:} Coefficient $-1.16$ (p = 0.110) is not significant. \textit{Ceteris paribus}, a 0.01 increase in vulnerability associates with a 1.16 percentage point monthly return decrease, but we cannot reject the null of no effect. The \textit{partial effect} isolates vulnerability's impact while holding dp and dfr constant.
+
+\textbf{Default Return Spread:} Highly significant ($\beta=1.15$, p$<$0.001). A 1-point increase in dfr predicts 1.15-point higher returns. This is the dominant predictor, consistent with Fama \& French (1989).
+
+\textbf{Dividend-Price Ratio:} Not significant (p = 0.329), consistent with weak predictive power documented by Goyal \& Welch (2008).
+
+\subsection{Model Fit}
+
+\textbf{R$^2$ = 0.252:} The model explains 25.2\% of variance, substantially exceeding typical 0.5-4\% for monthly return prediction. High contemporaneous R$^2$ reflects dfr's strong correlation with returns but does not imply forecasting power.
+
+\textbf{F-statistic (17.44, p$<$0.001):} We reject $H_0: \beta_1=\beta_2=\beta_3=0$. The model has significant explanatory power, driven by dfr.
+
+\subsection{Omitted Variable Bias}
+
+Potentially omitted variables include: (1) \textbf{VIX} (market volatility)---omitting may upward-bias vulnerability coefficient, working against finding negative effects; (2) \textbf{Momentum}---unlikely to bias vulnerability given different time scales; (3) \textbf{Default Yield Spread (dfy)}---highly correlated with dfr, choice affects magnitudes not conclusions. Including dp and dfr controls valuation and credit channels, mitigating bias in the vulnerability coefficient.
+
+\subsection{Robustness}
+
+Winsorization at 1\% and 5\% yields vulnerability coefficients $-0.97$ (p=0.16) and $-0.63$ (p=0.34), confirming results are not outlier-driven. Consistent negative sign and insignificance demonstrate robustness.
+
+% ========== VISUALIZATION PLOTS SECTION ==========
+
+\section{Visualizations}
+
+% INSTRUCTION FOR TIME SERIES PLOTS
+% Save your time series visualization as "time_series_plots.png"
+% This should show Excess Returns, Vulnerability, dp, and dfr over time
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{../06_VISUALIZATIONS/time_series_plots.png}
+\caption{Time Series of Variables (1995-2020). Top: Monthly excess S\&P 500 returns show high volatility during 2008 crisis and 2020 COVID-19. Middle: US vulnerability exhibits slow decline. Bottom: Financial predictors (dp, dfr) display cyclical patterns.}
+\label{fig:timeseries}
+\end{figure}
+
+% INSTRUCTION FOR SCATTER PLOTS
+% Save scatter plots as "scatter_plots.png"
+% Should show 3 panels: Vuln vs Returns, dp vs Returns, dfr vs Returns
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{../06_VISUALIZATIONS/scatter_plots.png}
+\caption{Scatter Plots of Predictors vs. Excess Returns. Left: Vulnerability shows weak negative relationship. Center: Dividend-price ratio exhibits noisy pattern. Right: Default return spread displays strong positive correlation (drives R$^2$).}
+\label{fig:scatter}
+\end{figure}
+
+% INSTRUCTION FOR DIAGNOSTIC PLOTS
+% Save residual diagnostics as "diagnostic_plots.png"
+% Should include: Residuals vs Fitted, Q-Q plot, Histogram, Residuals over Time
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{../06_VISUALIZATIONS/diagnostic_plots.png}
+\caption{Regression Diagnostics. Top-left: Residuals vs Fitted shows heteroskedasticity (variance increases with fitted values). Top-right: Q-Q plot indicates non-normal residuals (fat tails). Bottom-left: Histogram confirms leptokurtic distribution. Bottom-right: Residuals over time show no autocorrelation pattern.}
+\label{fig:diagnostics}
+\end{figure}
+
+% INSTRUCTION FOR CORRELATION HEATMAP
+% Save correlation matrix as "correlation_heatmap.png"
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{../06_VISUALIZATIONS/correlation_heatmap.png}
+\caption{Correlation Matrix of Variables. Low correlations among predictors confirm absence of multicollinearity. Excess returns correlate most strongly with dfr (0.48), weakly with vulnerability (-0.09).}
+\label{fig:correlation}
+\end{figure}
+
+\section{Diagnostic Tests}
+
+\subsection{Multicollinearity}
+
+VIF values: Vuln (1.11), dp (1.11), dfr (1.00)---all well below threshold of 10. \textbf{No multicollinearity.}
+
+\subsection{Normality}
+
+Jarque-Bera (56.83, p$<$0.001) and Shapiro-Wilk (0.977, p$<$0.001) reject normality. However, with n=312, the Central Limit Theorem ensures asymptotically normal estimators. \textbf{Remedial action:} Robust standard errors (HC3) provide valid inference despite non-normality.
+
+\textbf{Test advantages/limitations:} JB based on skewness/kurtosis, simple but may over-reject in large samples. Shapiro-Wilk more powerful for n$<$2000, less reliable for very large samples.
+
+\subsection{Heteroskedasticity}
+
+Breusch-Pagan (28.33, p$<$0.001) and White (79.97, p$<$0.001) strongly reject homoskedasticity. Error variance is non-constant, likely higher during crises. Standard OLS errors are inconsistent. \textbf{Remedial action:} HC3 robust standard errors used throughout (finite-sample White adjustment). Alternative: Weighted Least Squares if variance structure known.
+
+\textbf{Test advantages/limitations:} BP simple but assumes linear variance function. White more general, robust to various forms, but lower power in small samples.
+
+\subsection{Autocorrelation}
+
+Durbin-Watson (2.09) near 2; Breusch-Godfrey at 4 lags (1.71, p=0.79) fails to reject no autocorrelation. \textbf{No evidence of serial correlation} despite repeated annual vulnerability values. \textbf{No correction needed.}
+
+\textbf{Test advantages/limitations:} DW simple, widely used, but only tests AR(1) and has inconclusive zone. BG tests higher-order autocorrelation, valid with lagged Y, but requires lag specification.
+
+\section{Recession Analysis and Structural Breaks}
+
+\subsection{Recession Dummy}
+
+A recession dummy covers NBER dates: March 2001--Nov 2001 (dot-com), Dec 2007--June 2009 (GFC), Feb--Apr 2020 (COVID)---31 months (9.9\%). Adding interaction $Vuln \times Recession$:
+
+\begin{table}[H]
+\centering
+\caption{Regression with Recession Interaction}
+\label{tab:recession}
+\begin{threeparttable}
+\begin{tabular}{lccc}
+\toprule
+Variable & Coefficient & Robust SE & p-value \\
+\midrule
+Vulnerability & $-0.0658$ & 0.6310 & 0.917 \\
+dfr & $1.4989^{***}$ & 0.1730 & 0.000 \\
+Recession & 0.1245 & 1.6180 & 0.939 \\
+Vuln $\times$ Recession & $-0.4592$ & 5.1280 & 0.929 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item Marginal effects: Expansions $-0.07$ (n.s.), Recessions $-0.52$ (n.s.).
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Interaction coefficient insignificant (p=0.929). \textbf{Climate vulnerability does not differ significantly across business cycles.} Limited recession observations and low US vulnerability variation constrain power.
+
+\subsection{Structural Breaks (Chow Test)}
+
+Chow tests examine coefficient stability at crisis dates:
+
+\begin{table}[H]
+\centering
+\caption{Structural Break Tests}
+\label{tab:chow}
+\begin{tabular}{lcccl}
+\toprule
+Break Point & Pre-N & Post-N & F-stat & p-value \\
+\midrule
+March 2000 (Dot-com) & 62 & 250 & 3.10 & 0.016$^{**}$ \\
+Sept 2008 (Lehman) & 164 & 148 & 4.09 & 0.003$^{***}$ \\
+March 2020 (COVID) & 302 & 10 & 0.87 & 0.480 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Significant breaks at 2000 and 2008 indicate \textbf{structural instability}. Predictor-return relationships shifted during crises, reflecting regime changes in valuation metrics and credit-equity linkages. March 2020 shows no break due to insufficient post-break observations (n=10). Pooling data across regimes may mask time-varying effects. \textbf{Implications:} Sub-period analysis or rolling regressions could reveal dynamics; climate vulnerability's effect may vary across regimes.
+
+\section{Conclusion}
+
+Climate vulnerability does \textbf{not significantly predict} monthly US stock returns (p=0.110) after controlling for valuation and credit risk. The null finding is robust to winsorization and holds across recessions/expansions. Default return spread dominates (p$<$0.001), explaining 25.2\% of variance. Structural breaks at 2000 and 2008 indicate time-varying relationships.
+
+\textbf{Interpretations:} (1) Climate risk already priced in efficient US markets; (2) Low US vulnerability (0.307-0.317) limits detection power---cross-country studies with high-vulnerability emerging markets may find effects; (3) Annual ND-GAIN data lacks monthly variation; (4) Climate may affect long-horizon returns, not short-term; (5) Aggregate S\&P 500 masks sector heterogeneity.
+
+\textbf{Implications:} For investors, vulnerability offers no monthly trading signal. For policymakers, absence of panic reactions suggests either effective risk pricing or insufficient market attention. Future research should examine cross-country panels, higher-frequency climate proxies, long-horizon predictability, and sector-level heterogeneity.
+
+\textbf{Limitations:} Contemporaneous specification tests association not forecasting; annual data limits variation; US represents low-vulnerability context; structural breaks suggest instability; omitted variables (VIX, momentum) may bias estimates.
+
+Despite limitations, this study rigorously tests climate vulnerability's role using theory-driven methods and comprehensive diagnostics. The null finding is informative: in low-vulnerability, efficient markets, climate risks may not translate to short-term return predictability.
+
+\begin{thebibliography}{9}
+
+\bibitem{Batten2020}
+Batten, S., Sowerbutts, R. and Tanaka, M., 2020. Climate change: Macroeconomic impact and implications for monetary policy. \textit{Ecological, societal, and technological risks and the financial sector}, pp.13-38.
+
+\bibitem{Campbell1988}
+Campbell, J.Y. and Shiller, R.J., 1988. The dividend-price ratio and expectations of future dividends and discount factors. \textit{Review of Financial Studies}, 1(3), pp.195-228.
+
+\bibitem{Fama1989}
+Fama, E.F. and French, K.R., 1989. Business conditions and expected returns on stocks and bonds. \textit{Journal of Financial Economics}, 25(1), pp.23-49.
+
+\bibitem{Goyal2008}
+Goyal, A. and Welch, I., 2008. A comprehensive look at the empirical performance of equity premium prediction. \textit{Review of Financial Studies}, 21(4), pp.1455-1508.
+
+\bibitem{Goyal2024}
+Goyal, A., Welch, I. and Zafirov, A., 2024. A comprehensive 2022 look at the empirical performance of equity premium prediction. \textit{The Review of Financial Studies}, 37(11), pp.3490-3557.
+
+\bibitem{Kling2025}
+Kling, G., Lo, Y.C., Murinde, V. and Volz, U., 2025. Climate vulnerability and the cost of debt. \textit{Oxford Open Economics}, 4(1), pp.1-14.
+
+\end{thebibliography}
+
+\end{document}
